@@ -50,7 +50,26 @@ public class LockedMe {
                 System.out.println("Thank you for using LockedMe.com!");
                 System.exit(0);
                 break;
-   
+        }
+    }
+
+    private static void displayFilesAscending() {
+        File directory = new File(ROOT_DIR);
+        File[] files = directory.listFiles();
+
+        if (files != null && files.length > 0) {
+            List<String> fileNames = new ArrayList<>();
+            for (File file : files) {
+                fileNames.add(file.getName());
+            }
+
+            Collections.sort(fileNames);
+            System.out.println("\n=== Files in Ascending Order ===");
+            for (String fileName : fileNames) {
+                System.out.println(fileName);
+            }
+        } else {
+            System.out.println("The directory is empty.");
         }
     }
 
@@ -65,4 +84,77 @@ public class LockedMe {
         handleFileOperations(choice);
     }
 
+    private static void handleFileOperations(int choice) {
+        switch (choice) {
+            case 1:
+                addFile();
+                showFileOperationsMenu();
+                break;
+            case 2:
+                deleteFile();
+                showFileOperationsMenu();
+                break;
+            case 3:
+                searchFile();
+                showFileOperationsMenu();
+                break;
+            case 4:
+                showMainMenu();
+                break;
+        }
+    }
+
+    private static void addFile() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the file name to add: ");
+        String fileName = scanner.nextLine();
+
+        File file = new File(ROOT_DIR + fileName);
+        try {
+            if (file.createNewFile()) {
+                System.out.println("File added successfully.");
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred while adding the file.");
+        }
+    }
+
+    private static void deleteFile() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the file name to delete: ");
+        String fileName = scanner.nextLine();
+
+        File file = new File(ROOT_DIR + fileName);
+        if (file.delete()) {
+            System.out.println("File deleted successfully.");
+        } else {
+            System.out.println("Unable to delete the file.");
+        }
+    }
+
+    private static void searchFile() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the file name to search: ");
+        String fileName = scanner.nextLine();
+
+        File directory = new File(ROOT_DIR);
+        File[] files = directory.listFiles();
+        boolean fileFound = false;
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().equals(fileName)) {
+                    System.out.println("File found: " + file.getName());
+                    fileFound = true;
+                    break;
+                }
+            }
+        }
+
+        if (!fileFound) {
+            System.out.println("File not found.");
+        }
+    }
 }
